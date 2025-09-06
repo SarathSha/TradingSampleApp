@@ -16,10 +16,22 @@ final class HoldingsViewController: UIViewController {
         return tableView
     }()
 
+    private let viewModel: HoldingViewModelProtocol
+    
+    init(viewModel: HoldingViewModelProtocol = HoldingsViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupTableView()
+        loadData()
     }
 
     private func setupUI() {
@@ -40,6 +52,10 @@ final class HoldingsViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.tableFooterView = UIView()
+    }
+    
+    private func loadData() {
+        viewModel.loadHoldings()
     }
 }
 
