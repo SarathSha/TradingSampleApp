@@ -5,7 +5,7 @@
 //  Created by Sarath Sha on 06/09/25.
 //
 
-import Foundation
+import UIKit
 
 struct Response: Codable {
     let data: HoldingsResponse
@@ -51,5 +51,23 @@ struct HoldingsDisplayModel: Equatable {
         self.pnlPercentage = holding.totalInvestment > 0 ? (holding.pnl / holding.totalInvestment) * 100 : 0
         self.isProfit = holding.isProfit
         self.isTodaysProfit = holding.isTodaysProfit
+    }
+}
+
+// MARK: - Holdings Cell Data
+
+struct HoldingsCellData {
+    let symbol: String
+    let quantity: String
+    let lastTradedPrice: String
+    let pnl: String
+    let pnlColor: UIColor
+    
+    init(from displayModel: HoldingsDisplayModel) {
+        self.symbol = displayModel.symbol
+        self.quantity = "\(displayModel.quantity)"
+        self.lastTradedPrice = "₹ \(String(format: "%.2f", displayModel.lastTradedPrice))"
+        self.pnl = "₹ \(String(format: "%.2f", displayModel.pnl))"
+        self.pnlColor = displayModel.isProfit ? .systemGreen : .systemRed
     }
 }

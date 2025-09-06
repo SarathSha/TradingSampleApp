@@ -31,6 +31,7 @@ final class HoldingsViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupTableView()
+        setupViewModel()
         loadData()
     }
 
@@ -50,23 +51,47 @@ final class HoldingsViewController: UIViewController {
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(HoldingsTableViewCell.self, forCellReuseIdentifier: HoldingsTableViewCell.identifier)
         tableView.tableFooterView = UIView()
     }
     
     private func loadData() {
         viewModel.loadHoldings()
     }
+    
+    private func setupViewModel() {
+        viewModel.onStateChange = { [weak self] in
+            self?.updateUI()
+        }
+    }
+    
+    private func updateUI() {
+        switch viewModel.viewState {
+        case .loading:
+            break
+        case .loaded:
+            showLoadedState()
+        }
+    }
+    
+    private func showLoadedState() {
+        tableView.reloadData()
+    }
 }
 
 extension HoldingsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        5
+        viewModel.holdingsList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "Hello \(indexPath.row)"
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: HoldingsTableViewCell.identifier) as? HoldingsTableViewCell else {
+            return UITableViewCell()
+        }
+        let holding = viewModel.holdingsList[indexPath.row]
+        let cellData = HoldingsCellData(from: holding)
+        cell.configure(with: cellData)
         return cell
     }
 }

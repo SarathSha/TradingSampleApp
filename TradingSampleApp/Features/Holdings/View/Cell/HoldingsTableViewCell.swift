@@ -88,6 +88,9 @@ final class HoldingsTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    static var identifier: String {
+        String(describing: type(of: self))
+    }
     private func setupUI() {
         backgroundColor = .clear
         selectionStyle = .none
@@ -142,5 +145,14 @@ final class HoldingsTableViewCell: UITableViewCell {
             pnlLabel.centerYAnchor.constraint(equalTo: pnlValueLabel.centerYAnchor),
             pnlLabel.trailingAnchor.constraint(equalTo: pnlValueLabel.leadingAnchor, constant: -4)
         ])
+    }
+    
+    // MARK: - Configuration
+    func configure(with data: HoldingsCellData) {
+        symbolLabel.text = data.symbol
+        quantityValueLabel.text = data.quantity
+        ltpValueLabel.text = data.lastTradedPrice
+        pnlValueLabel.text = data.pnl
+        pnlValueLabel.textColor = data.pnlColor
     }
 }
