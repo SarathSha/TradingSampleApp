@@ -16,10 +16,20 @@ final class HoldingsViewController: UIViewController {
         return tableView
     }()
 
+    private let portfolioSummaryView: PortfolioSummaryView = {
+        let view = PortfolioSummaryView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     private let viewModel: HoldingViewModelProtocol
+    private let portfolioViewModel: PortfolioViewModelProtocol
+
     
-    init(viewModel: HoldingViewModelProtocol = HoldingsViewModel()) {
+    init(viewModel: HoldingViewModelProtocol = HoldingsViewModel(),
+         portfolioViewModel: PortfolioViewModelProtocol = PortfolioViewModel()) {
         self.viewModel = viewModel
+        self.portfolioViewModel = portfolioViewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -38,13 +48,13 @@ final class HoldingsViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .systemGroupedBackground
         title = "Portfolio"
-        view.addSubview(tableView)
+        view.addSubviews(tableView, portfolioSummaryView)
+        tableView.pinToEdges(of: view)
         NSLayoutConstraint.activate([
-            // Table view
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            // Portfolio summary view
+            portfolioSummaryView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            portfolioSummaryView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            portfolioSummaryView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
@@ -63,6 +73,10 @@ final class HoldingsViewController: UIViewController {
         viewModel.onStateChange = { [weak self] in
             self?.updateUI()
         }
+        
+        portfolioViewModel.onStateChange = { [weak self] in
+            self?.updatePortfolioSummary()
+        }
     }
     
     private func updateUI() {
@@ -76,6 +90,16 @@ final class HoldingsViewController: UIViewController {
     
     private func showLoadedState() {
         tableView.reloadData()
+        
+        // Update Portfolio summary
+        portfolioViewModel.updatePortfolioSummary(from: viewModel.holdingsList)
+    }
+
+    // MARK: - Portfolio Summary Updates
+    
+    private func updatePortfolioSummary() {
+        guard let summary = portfolioViewModel.portfolioSummary else { return }
+        portfolioSummaryView.configure(with: summary, isExpanded: portfolioViewModel.viewState.isExpanded)
     }
 }
 
