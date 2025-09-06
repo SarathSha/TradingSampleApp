@@ -32,7 +32,6 @@ final class PortfolioSummaryView: UIView {
     
     private let collapsedContentView: UIView = {
         let view = UIView()
-        view.backgroundColor = .green // test
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -41,7 +40,6 @@ final class PortfolioSummaryView: UIView {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.backgroundColor = .red // test
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -50,7 +48,6 @@ final class PortfolioSummaryView: UIView {
     
     private let expandedContentView: UIView = {
         let view = UIView()
-        view.backgroundColor = .yellow
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -60,7 +57,6 @@ final class PortfolioSummaryView: UIView {
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 4
-        stackView.backgroundColor = .blue
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()

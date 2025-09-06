@@ -26,27 +26,35 @@ final class PortfolioCalculator: PortfolioCalculatorProtocol {
         )
     }
     
-    // MARK: - Private Calculation Methods
+    // MARK: - Public Calculation Methods
     
-    private func calculateCurrentValue(from holdings: [HoldingsDisplayModel]) -> Double {
+    
+    /// Current Value = (Last Traded Price × Quantity) for all holdings
+    func calculateCurrentValue(from holdings: [HoldingsDisplayModel]) -> Double {
         holdings.reduce(0) { total, holding in
-            total + holding.currentValue
+            let holdingCurrentValue = holding.lastTradedPrice * Double(holding.quantity)
+            return total + holdingCurrentValue
         }
     }
     
-    private func calculateTotalInvestment(from holdings: [HoldingsDisplayModel]) -> Double {
+    /// Total Investment = (Average Price × Quantity) for all holdings
+    func calculateTotalInvestment(from holdings: [HoldingsDisplayModel]) -> Double {
         holdings.reduce(0) { total, holding in
-            total + holding.totalInvestment
+            let holdingTotalInvestment = holding.averagePrice * Double(holding.quantity)
+            return total + holdingTotalInvestment
         }
     }
     
-    private func calculateTotalPnl(currentValue: Double, totalInvestment: Double) -> Double {
+    /// Total P&L = Current Value - Total Investment
+    func calculateTotalPnl(currentValue: Double, totalInvestment: Double) -> Double {
         currentValue - totalInvestment
     }
     
-    private func calculateTodaysPnl(from holdings: [HoldingsDisplayModel]) -> Double {
+    /// Today's P&L = ((Close Price - Last Traded Price) × Quantity) for all holdings
+    func calculateTodaysPnl(from holdings: [HoldingsDisplayModel]) -> Double {
         holdings.reduce(0) { total, holding in
-            total + holding.todaysPnl
+            let holdingTodaysPnl = (holding.closePrice - holding.lastTradedPrice) * Double(holding.quantity)
+            return total + holdingTodaysPnl
         }
     }
 }
