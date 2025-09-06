@@ -21,3 +21,35 @@ struct HoldingsAPIResponse: Codable {
     let ltp: Double
     let close: Double
 }
+
+// MARK: - UI Models
+
+struct HoldingsDisplayModel: Equatable {
+    let symbol: String
+    let quantity: Int
+    let lastTradedPrice: Double
+    let averagePrice: Double
+    let closePrice: Double
+    let currentValue: Double
+    let totalInvestment: Double
+    let pnl: Double
+    let todaysPnl: Double
+    let pnlPercentage: Double
+    let isProfit: Bool
+    let isTodaysProfit: Bool
+    
+    init(from holding: Holdings) {
+        self.symbol = holding.symbol ?? ""
+        self.quantity = Int(holding.quantity)
+        self.lastTradedPrice = holding.lastTradedPrice
+        self.averagePrice = holding.averagePrice
+        self.closePrice = holding.closePrice
+        self.currentValue = holding.currentValue
+        self.totalInvestment = holding.totalInvestment
+        self.pnl = holding.pnl
+        self.todaysPnl = holding.todaysPnl
+        self.pnlPercentage = holding.totalInvestment > 0 ? (holding.pnl / holding.totalInvestment) * 100 : 0
+        self.isProfit = holding.isProfit
+        self.isTodaysProfit = holding.isTodaysProfit
+    }
+}
