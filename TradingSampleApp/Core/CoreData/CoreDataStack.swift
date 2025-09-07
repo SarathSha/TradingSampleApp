@@ -20,6 +20,8 @@ final class CoreDataStack {
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
+        // Ensure changes from background contexts are merged to main context
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return container
     }()
     

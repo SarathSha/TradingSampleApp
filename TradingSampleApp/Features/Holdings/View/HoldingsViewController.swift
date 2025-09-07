@@ -10,8 +10,7 @@ import UIKit
 final class HoldingsViewController: UIViewController {
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
-        tableView.backgroundColor = .systemGroupedBackground
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLine
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -21,6 +20,16 @@ final class HoldingsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+
+    private let loadingView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .primaryBlue
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
+    private let errorView = HoldingsErrorView()
 
     private let viewModel: HoldingViewModelProtocol
     private let portfolioViewModel: PortfolioViewModelProtocol
@@ -48,7 +57,7 @@ final class HoldingsViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .systemGroupedBackground
         title = "Portfolio"
-        view.addSubviews(tableView, portfolioSummaryView)
+        view.addSubviews(tableView, portfolioSummaryView, loadingView, errorView)
         tableView.pinToEdges(of: view)
         NSLayoutConstraint.activate([
             // Portfolio summary view
@@ -56,6 +65,11 @@ final class HoldingsViewController: UIViewController {
             portfolioSummaryView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             portfolioSummaryView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        errorView.pinToEdges(of: view)
+        loadingView.centerInSuperview()
+        
+        // Initially hide error view
+        errorView.isHidden = true
     }
     
     private func setupTableView() {
@@ -63,6 +77,11 @@ final class HoldingsViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(HoldingsTableViewCell.self, forCellReuseIdentifier: HoldingsTableViewCell.identifier)
         tableView.tableFooterView = UIView()
+        
+        // Pull to refresh
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.refreshControl = refreshControl
     }
     
     private func loadData() {
@@ -82,19 +101,47 @@ final class HoldingsViewController: UIViewController {
     private func updateUI() {
         switch viewModel.viewState {
         case .loading:
-            break
+            showLoadedState()
         case .loaded:
             showLoadedState()
+        case .error(let error):
+            showErrorState(error: error)
         }
     }
     
+    private func showLoadingState() {
+        tableView.isHidden = true
+        errorView.isHidden = true
+        loadingView.startAnimating()
+    }
     private func showLoadedState() {
+        loadingView.stopAnimating()
+        tableView.refreshControl?.endRefreshing()
+        
         tableView.reloadData()
         
         // Update Portfolio summary
         portfolioViewModel.updatePortfolioSummary(from: viewModel.holdingsList)
+        
+        tableView.isHidden = false
+        errorView.isHidden = true
     }
 
+    private func showErrorState(error: Error) {
+        loadingView.stopAnimating()
+        tableView.refreshControl?.endRefreshing()
+        
+        tableView.isHidden = true
+        errorView.isHidden = false
+        
+        errorView.configure(with: error)
+        errorView.onRetryTapped = { [weak self] in
+            self?.refreshData()
+        }
+    }
+    @objc private func refreshData() {
+        viewModel.refresh()
+    }
     // MARK: - Portfolio Summary Updates
     
     private func updatePortfolioSummary() {

@@ -16,6 +16,10 @@ final class PortfolioSummaryView: UIView {
         let view = UIView()
         view.backgroundColor = .systemGray6
         view.layer.cornerRadius = 8
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 1)
+        view.layer.shadowRadius = 2
+        view.layer.shadowOpacity = 0.1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -123,19 +127,8 @@ final class PortfolioSummaryView: UIView {
     }
     
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            // Container view
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            
-            // Main stack view
-            mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
-        ])
+        containerView.pinToEdges(of: self, padding: .init(top: 8, left: 4, bottom: 8, right: 4))
+        mainStackView.pinToEdges(of: containerView, padding: .init(top: 8, left: 8, bottom: 8, right: 8))
         collapsedStackView.pinToEdges(of: collapsedContentView)
         expandedStackView.pinToEdges(of: expandedContentView)
         // Height constraints
@@ -147,7 +140,7 @@ final class PortfolioSummaryView: UIView {
     }
     
     private func setupActions() {
-        mainStackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(expandButtonTapped)))
+        containerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(expandButtonTapped)))
     }
 
     // MARK: - Actions
@@ -213,7 +206,7 @@ private final class PortfolioSummaryRowView: UIView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

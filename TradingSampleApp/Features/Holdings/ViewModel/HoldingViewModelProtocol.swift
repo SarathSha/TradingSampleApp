@@ -7,6 +7,7 @@
 
 protocol HoldingViewModelProtocol: AnyObject {
     func loadHoldings()
+    func refresh()
     var holdingsList: [HoldingsDisplayModel] { get set }
     var viewState: HoldingsViewState { get }
     var onStateChange: (() -> Void)? { get set }

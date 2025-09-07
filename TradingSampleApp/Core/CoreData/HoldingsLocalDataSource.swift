@@ -58,14 +58,13 @@ final class HoldingsLocalDataSourceImpl: HoldingsLocalDataSource {
     
     func fetchHoldings() async throws -> [Holdings] {
         try await withCheckedThrowingContinuation { continuation in
-            coreDataStack.performBackgroundTask { context in
-                let fetchRequest = Holdings.fetchRequest()
-                do {
-                    let holdings = try context.fetch(fetchRequest)
-                    continuation.resume(returning: holdings)
-                } catch {
-                    continuation.resume(throwing: CoreDataError.fetchError(error))
-                }
+            let context = coreDataStack.viewContext
+            let fetchRequest = Holdings.fetchRequest()
+            do {
+                let holdings = try context.fetch(fetchRequest)
+                continuation.resume(returning: holdings)
+            } catch {
+                continuation.resume(throwing: CoreDataError.fetchError(error))
             }
         }
     }

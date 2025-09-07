@@ -7,4 +7,5 @@
 
 protocol HoldingsRepositoryProtocol {
     func fetchHoldings() async throws -> [HoldingsDisplayModel]
+    func refreshHoldings() async throws -> [HoldingsDisplayModel]
 }

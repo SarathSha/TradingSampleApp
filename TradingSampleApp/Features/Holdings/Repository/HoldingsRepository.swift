@@ -6,7 +6,6 @@
 //
 import Foundation
 final class HoldingsRepository: HoldingsRepositoryProtocol {
-
     private let holdingsService: HoldingService
     private let holdingsLocalDataSource: HoldingsLocalDataSource
 
@@ -16,37 +15,41 @@ final class HoldingsRepository: HoldingsRepositoryProtocol {
         self.holdingsLocalDataSource = holdingsLocalDataSource
     }
 
-    func fetchHoldings() async throws -> [HoldingsDisplayModel] {
+    func refreshHoldings() async throws -> [HoldingsDisplayModel] {
         do {
             let apiHoldings = try await holdingsService.getHoldings().userHolding
             try await holdingsLocalDataSource.saveHoldings(apiHoldings)
-            let displayModel = apiHoldings.compactMap { apiHolding in
-                // Create a temporary Holdings object to use the computed properties
-                let context = CoreDataStack.shared.viewContext
-                let holding = Holdings(context: context)
-                holding.symbol = apiHolding.symbol
-                holding.quantity = Int32(apiHolding.quantity)
-                holding.lastTradedPrice = apiHolding.ltp
-                holding.averagePrice = apiHolding.avgPrice
-                holding.closePrice = apiHolding.close
-                holding.currentValue = apiHolding.ltp * Double(apiHolding.quantity)
-                holding.totalInvestment = apiHolding.avgPrice * Double(apiHolding.quantity)
-                holding.pnl = (apiHolding.ltp - apiHolding.avgPrice) * Double(apiHolding.quantity)
-                holding.todaysPnl = (apiHolding.ltp - apiHolding.close) * Double(apiHolding.quantity)
-                holding.isProfit = holding.pnl >= 0
-                holding.isTodaysProfit = holding.todaysPnl >= 0
-                holding.lastUpdated = Date()
-                return HoldingsDisplayModel(from: holding)
-            }
-            return displayModel
+            
+            let savedHoldings = try await holdingsLocalDataSource.fetchHoldings()
+            return savedHoldings.map { HoldingsDisplayModel(from: $0) }
         } catch {
             // If api fails, try to return cached data
+            print("failed to load holdings from API, falling back to cache: \(error)")
             do {
                 let localHoldings = try await holdingsLocalDataSource.fetchHoldings()
+                print("loading from cache from catch block")
                 return localHoldings.map { HoldingsDisplayModel(from: $0) }
             } catch {
                 throw error
             }
         }
+    }
+
+    func fetchHoldings() async throws -> [HoldingsDisplayModel] {
+        // First try to fetch from cache
+        do {
+            let cachedHoldings = try await holdingsLocalDataSource.fetchHoldings()
+            if !cachedHoldings.isEmpty {
+                print("loading from local store cache")
+                return cachedHoldings.map { HoldingsDisplayModel(from: $0) }
+            }
+        } catch {
+            // If cache fetch fails, continue to API call
+            print("error \(#function): \(error)")
+            throw error
+        }
+
+        // If no cached data, fetch from API
+        return try await refreshHoldings()
     }
 }

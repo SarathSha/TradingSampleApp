@@ -11,11 +11,6 @@ final class HoldingsTableViewCell: UITableViewCell {
     private let containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBackground
-        view.layer.cornerRadius = 8
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 1)
-        view.layer.shadowRadius = 2
-        view.layer.shadowOpacity = 0.1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

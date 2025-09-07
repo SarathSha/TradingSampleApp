@@ -32,6 +32,21 @@ final class HoldingsViewModel: HoldingViewModelProtocol {
                 viewState = .loaded
             } catch {
                 print("error: \(error)")
+                viewState = .error(error)
+            }
+        }
+    }
+    
+    func refresh() {
+        viewState = .loading
+        Task {
+            do {
+                let holdings = try await repository.refreshHoldings()
+                holdingsList = holdings
+                viewState = .loaded
+            } catch {
+                print("error: \(error)")
+                viewState = .error(error)
             }
         }
     }
