@@ -22,7 +22,7 @@ final class HoldingsErrorView: UIView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Something went wrong"
+        label.text = Constants.errorTitle
         label.font = .titleFont
         label.textColor = .label
         label.textAlignment = .center
@@ -42,7 +42,7 @@ final class HoldingsErrorView: UIView {
     
     private let retryButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Retry", for: .normal)
+        button.setTitle(Constants.retry, for: .normal)
         button.titleLabel?.font = .bodyFont
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .primaryBlue

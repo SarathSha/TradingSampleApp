@@ -101,7 +101,7 @@ final class HoldingsViewController: UIViewController {
     private func updateUI() {
         switch viewModel.viewState {
         case .loading:
-            showLoadedState()
+            showLoadingState()
         case .loaded:
             showLoadedState()
         case .error(let error):

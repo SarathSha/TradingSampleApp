@@ -105,13 +105,9 @@ final class HoldingsTableViewCell: UITableViewCell {
     }
     
     private func setupConstraints() {
+        // Container view
+        containerView.pinToEdges(of: self, padding: .init(top: 8, left: 16, bottom: 8, right: 16))
         NSLayoutConstraint.activate([
-            // Container view
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            
             // Symbol label
             symbolLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
             symbolLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),

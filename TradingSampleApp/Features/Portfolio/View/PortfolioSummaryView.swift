@@ -16,6 +16,8 @@ final class PortfolioSummaryView: UIView {
         let view = UIView()
         view.backgroundColor = .systemGray6
         view.layer.cornerRadius = 8
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.black.cgColor
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 1)
         view.layer.shadowRadius = 2
@@ -174,13 +176,17 @@ final class PortfolioSummaryView: UIView {
         let displayData = PortfolioDisplayData(from: summary)
         
         // Collapsed state labels
-        totalPnlRowForCollapsed.configure(title: "Profit & Loss*", value: "\(displayData.totalPnlText) (\(displayData.totalPnlPercentageText))", valueColor: displayData.totalPnlColor)
+        totalPnlRowForCollapsed.configure(title: Constants.Portfolio.profitAndLoss,
+                                          value: "\(displayData.totalPnlText) (\(displayData.totalPnlPercentageText))",
+                                          valueColor: displayData.totalPnlColor)
 
         // Expanded state rows
-        currentValueRow.configure(title: "Current value*", value: displayData.currentValueText, valueColor: .label)
-        totalInvestmentRow.configure(title: "Total investment*", value: displayData.totalInvestmentText, valueColor: .label)
-        todaysPnlRow.configure(title: "Today's Profit & Loss*", value: displayData.todaysPnlText, valueColor: displayData.todaysPnlColor)
-        totalPnlRow.configure(title: "Profit & Loss*", value: "\(displayData.totalPnlText) (\(displayData.totalPnlPercentageText))", valueColor: displayData.totalPnlColor)
+        currentValueRow.configure(title: Constants.Portfolio.currentValue,
+                                  value: displayData.currentValueText, valueColor: .label)
+        totalInvestmentRow.configure(title: Constants.Portfolio.totalInvestment,
+                                     value: displayData.totalInvestmentText, valueColor: .label)
+        todaysPnlRow.configure(title: Constants.Portfolio.todayProfitAndLoss, value: displayData.todaysPnlText, valueColor: displayData.todaysPnlColor)
+        totalPnlRow.configure(title: Constants.Portfolio.profitAndLoss, value: "\(displayData.totalPnlText) (\(displayData.totalPnlPercentageText))", valueColor: displayData.totalPnlColor)
         
     }
     
