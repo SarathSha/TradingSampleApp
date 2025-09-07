@@ -5,21 +5,24 @@ A modern iOS application built with Swift that displays stock portfolio holdings
 ## 📸 Screenshots
 
 ### Portfolio Overview
-<img src="https://via.placeholder.com/300x600/FFFFFF/000000?text=Portfolio+Screen" alt="Portfolio Screen" width="300"/>
+<img width="1125" height="2436" alt="IMG_0154 2" src="https://github.com/user-attachments/assets/0d5ffb91-a7be-4990-ae24-5d832cc71ee9" />
 *Main portfolio screen showing individual stock holdings with real-time P&L calculations*
 
+### Portfolio Summary
+<img width="1125" height="2436" alt="IMG_0155 2" src="https://github.com/user-attachments/assets/792896a6-4b55-495a-923f-0b7d194d2a12" />
+*Bottom summary bar displaying total portfolio value and overall P&L performance*
+
 ### Loading State
-<img src="https://via.placeholder.com/300x600/FFFFFF/000000?text=Loading+State" alt="Loading State" width="300"/>
+<img width="1125" height="2436" alt="IMG_0158 2" src="https://github.com/user-attachments/assets/45044fa1-f77a-498a-8a43-0073624f6523" />
 *App loading state with spinner indicator while fetching data*
 
 ### Error Handling
-<img src="https://via.placeholder.com/300x600/FFFFFF/000000?text=Error+State" alt="Error State" width="300"/>
+<img width="1125" height="2436" alt="IMG_0157 2" src="https://github.com/user-attachments/assets/7b082384-3521-4616-8639-9e1b364ffe89" />
 *Graceful error handling with retry functionality when network requests fail*
 
-### Portfolio Summary
-<img src="https://via.placeholder.com/300x600/FFFFFF/000000?text=Portfolio+Summary" alt="Portfolio Summary" width="300"/>
-*Bottom summary bar displaying total portfolio value and overall P&L performance*
-
+### Code Coverage
+<img width="1440" height="900" alt="Screenshot 2025-09-07 at 10 30 43 PM" src="https://github.com/user-attachments/assets/b064b0b0-20cb-43ae-8420-0741813122a3" />
+all functional cases covered
 ## 📱 Overview
 
 This trading app provides users with a clean interface to view their stock holdings, track portfolio performance, and monitor daily P&L changes. The app fetches data from a REST API and caches it locally for offline access, ensuring a smooth user experience even without internet connectivity.
@@ -182,6 +185,13 @@ The app includes comprehensive unit tests covering:
 - **Repository Pattern**: Data fetching and caching
 - **Portfolio Calculations**: P&L and value calculations
 - **Error Handling**: Network and data errors
+- **Functional Tests**: Complete user workflows and edge cases
+
+### Test Coverage
+- **Code Coverage**: 75% overall coverage
+- **Functional Tests**: All critical user journeys tested
+- **Unit Tests**: Core business logic and data layer
+- **Integration Tests**: Repository and service interactions
 
 ### Test Structure
 ```
@@ -198,7 +208,7 @@ TradingSampleAppTests/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Xcode 15.0 or later
+- Xcode 16.0 or later
 - iOS 15.0 or later
 - Swift 5.9 or later
 
