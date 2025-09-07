@@ -112,6 +112,7 @@ final class HoldingsViewController: UIViewController {
     private func showLoadingState() {
         tableView.isHidden = true
         errorView.isHidden = true
+        portfolioSummaryView.isHidden = true
         loadingView.startAnimating()
     }
     private func showLoadedState() {
@@ -125,6 +126,7 @@ final class HoldingsViewController: UIViewController {
         
         tableView.isHidden = false
         errorView.isHidden = true
+        portfolioSummaryView.isHidden = false
     }
 
     private func showErrorState(error: Error) {
@@ -132,6 +134,7 @@ final class HoldingsViewController: UIViewController {
         tableView.refreshControl?.endRefreshing()
         
         tableView.isHidden = true
+        portfolioSummaryView.isHidden = true
         errorView.isHidden = false
         
         errorView.configure(with: error)
